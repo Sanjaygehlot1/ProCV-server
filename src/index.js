@@ -7,7 +7,7 @@ dotenv.config({
 
 DBConnect()
 .then(()=>{
-    app.listen(process.env.PORT || 5000 ,()=>{
+    app.listen(process.env.PORT || 3000 ,()=>{
         console.log("app listening at port:", process.env.PORT)
     }) 
 })
