@@ -6,5 +6,5 @@ export const router = Router()
 
 router.route("/register").post(RegisterUser)
 router.route("/login").post(LoginUser)
-router.route("/logout").post(LogOutUser)
+router.route("/logout").post(AuthMiddleWare,LogOutUser)
 router.route("/my-resumes").get(AuthMiddleWare,GetUserResumes)

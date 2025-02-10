@@ -76,6 +76,10 @@ const EducationDetails = AsyncHandler(async (req,res)=>{
         throw new ApiError(401,"No resume found")
     }
 
+    if(prevResume._id !== req.user?._id){
+        throw new ApiError(401,"you dont have permission to edit this file")
+    }
+
     prevResume.set({
         college:{
             name : collegeName,
@@ -123,6 +127,10 @@ const ExperienceDetails = AsyncHandler(async (req,res)=>{
         throw new ApiError(401,"No resume found")
     }
 
+    if(prevResume._id !== req.user?._id){
+        throw new ApiError(401,"you dont have permission to edit this file")
+    }
+
     prevResume.set({
         previousJob:{
             title,
@@ -163,6 +171,9 @@ const SkillsDetails = AsyncHandler(async (req,res)=>{
     if(!prevResume){
         throw new ApiError(401,"No resume found")
     }
+    if(prevResume._id !== req.user?._id){
+        throw new ApiError(401,"you dont have permission to edit this file")
+    }
 
     prevResume.set({
         skills : Skills
@@ -197,6 +208,11 @@ const About = AsyncHandler(async (req,res)=>{
 
     if(!prevResume){
         throw new ApiError(401,"No resume found")
+    }
+    console.log(prevResume.owner)
+    console.log(req.user?._id)
+    if(prevResume.owner.toString() !== new mongoose.Types.ObjectId(req.user?._id).toString()){
+        throw new ApiError(401,"you dont have permission to edit this file")
     }
 
     prevResume.set({
