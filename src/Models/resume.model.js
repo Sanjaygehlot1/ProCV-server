@@ -7,7 +7,6 @@ const ResumeSchema = new Schema({
     },
     template: {
         type: String,
-        required: true
     },
     firstName: {
         type: String,
@@ -31,7 +30,7 @@ const ResumeSchema = new Schema({
         type: {
             city: String,
             country: String,
-            pinCode: Number
+            pinCode: String
         },
         required: true
     },
@@ -43,8 +42,14 @@ const ResumeSchema = new Schema({
             },
             location: String,
             degree: {
-                type: String,
-                required: true
+                degreeName: {
+                    type: String,
+                    required: true
+                },
+                field: {
+                    type: String,
+                    required: true
+                }
             },
             graduation: {
                 month: String,
@@ -65,8 +70,20 @@ const ResumeSchema = new Schema({
                 type: String,
                 
             },
-            startDate: String,
-            endDate: String
+            remote: {
+                type: Boolean
+            },
+            currentlyWorking :{
+                type : Boolean
+            },
+            startDate: {
+                startMonth : String,
+                startYear : String
+            },
+            endDate: {
+                endMonth : String,
+                endYear : String
+            }
         }
     },
     skills: {

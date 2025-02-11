@@ -42,15 +42,14 @@ const RegisterUser = AsyncHandler(async (req, res) => {
     })
 
     if (ExistingUser) {
-        throw new ApiError(400, "User already exists with the same email or username.")
+        throw new ApiError(400, "User already exists with the same email")
     }
-
-    const hashedPass = await bcrypt.hash(password, 10)
-
+    
+    
     const NewUser = await User.create({
-        username: username.toLowerCase(),
+        username: fullName.toLowerCase(),
         email: email.toLowerCase(),
-        password: hashedPass,
+        password,
         fullName
     })
 
@@ -74,10 +73,10 @@ const RegisterUser = AsyncHandler(async (req, res) => {
 })
 
 const LoginUser = AsyncHandler(async (req, res) => {
-    const { username, email, password } = req.body
+    const {email, password } = req.body
 
-    if (!(username || email)) {
-        throw new ApiError(400, "Username or Email is required")
+    if (!email) {
+        throw new ApiError(400, "Email is required")
     }
 
     if (!password) {
@@ -86,15 +85,16 @@ const LoginUser = AsyncHandler(async (req, res) => {
     }
 
     const user = await User.findOne({
-        $or: [{ username }, { email }]
+        email
     })
 
     if (!user) {
         throw new ApiError(400, "User does not exist")
 
     }
+    console.log(password)
     const passCorrect = await user.IsPasswordCorrect(password)
-
+    console.log(passCorrect)
     if (!passCorrect) {
         throw new ApiError(401, "Password Incorrect")
     }

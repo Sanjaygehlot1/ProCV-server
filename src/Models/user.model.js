@@ -6,7 +6,6 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        unique: true
     },
     email: {
         type: String,
@@ -39,7 +38,7 @@ UserSchema.pre("save", async function (next) {
     next()
 })
 
-UserSchema.methods.IsPasswordCorrect =async function (password){
+UserSchema.methods.IsPasswordCorrect = async function (password){
     return await bcrypt.compare(password, this.password)
 }
 
