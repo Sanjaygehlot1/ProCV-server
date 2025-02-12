@@ -225,7 +225,6 @@ const SkillsDetails = AsyncHandler(async (req,res)=>{
     if(prevResume.owner.toString() !== req.user?._id.toString()){
         throw new ApiError(401,"you dont have permission to edit this file")
     }
-    console.log(Skills)
 
     prevResume.set({
         skills : Skills
