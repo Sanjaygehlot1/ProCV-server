@@ -11,7 +11,7 @@ const SelectTemplate = AsyncHandler(async (req,res)=>{
         throw new ApiError(401, "No Template found")
     }
     const newResume = await  Resume.create({
-        owner: req.user?._id,
+
         template : templateNumber,
         firstName: "Not Provided",
         email: "not-provided@gmail.com",
@@ -39,15 +39,11 @@ const SelectTemplate = AsyncHandler(async (req,res)=>{
 })
 
 
+
 const PersonalDetails = AsyncHandler(async (req,res)=>{
-    const userId = req.user?._id
     const {resumeId} = req.params
     const {firstName,lastName,email,phoneNumber,city,country,pinCode} = req.body
 
-    if(!userId){
-        throw new ApiError(401, "Unauthorized Access")
-
-    }
     if([firstName,email,city,country,pinCode].some((item)=> (item.trim() === "")
     )){
         throw new ApiError(401, "All marked fields are required")
@@ -60,11 +56,7 @@ const PersonalDetails = AsyncHandler(async (req,res)=>{
         throw new ApiError(402,"No resume found")
     }
     console.log(storedResume)
-    console.log(req.user?._id)
-    if(storedResume.owner.toString() !== req.user?._id.toString()){
-        throw new ApiError(401,"you dont have permission to edit this file")
-    }
-    
+ 
     storedResume.set({
         firstName,
         lastName : lastName || null,
@@ -116,9 +108,6 @@ const EducationDetails = AsyncHandler(async (req,res)=>{
         throw new ApiError(401,"No resume found")
     }
 
-    if(prevResume.owner.toString() !== req.user?._id.toString()){
-        throw new ApiError(401,"you dont have permission to edit this file")
-    }
 
     prevResume.set({
         college:{
@@ -170,10 +159,6 @@ const ExperienceDetails = AsyncHandler(async (req,res)=>{
         throw new ApiError(401,"No resume found")
     }
 
-    if(prevResume.owner.toString() !== req.user?._id.toString()){
-        throw new ApiError(401,"you dont have permission to edit this file")
-    }
-
     prevResume.set({
         previousJob:{
             title,
@@ -222,9 +207,6 @@ const SkillsDetails = AsyncHandler(async (req,res)=>{
     if(!prevResume){
         throw new ApiError(401,"No resume found")
     }
-    if(prevResume.owner.toString() !== req.user?._id.toString()){
-        throw new ApiError(401,"you dont have permission to edit this file")
-    }
 
     prevResume.set({
         skills : Skills
@@ -247,6 +229,41 @@ const SkillsDetails = AsyncHandler(async (req,res)=>{
     ))
 
 })
+
+const SaveProjects = AsyncHandler(async(req,res)=>{
+    const {Projects} = req.body
+    const {resumeId} = req.params
+    if(!resumeId){
+        throw new ApiError(401,"Id not found")
+    }
+
+    const prevResume = await Resume.findById(resumeId)
+
+    if(!prevResume){
+        throw new ApiError(401,"No resume found")
+    }
+
+    prevResume.set({
+        projects : Projects
+    })
+
+    await prevResume.save({validateBeforeSave: true})
+
+    const resume = await Resume.findById(prevResume._id)
+
+    if(!resume){
+        throw new ApiError(401,"No resume found")
+    }
+
+    return res
+    .status(200)
+    .json(new ApiResponse(
+        200,
+        resume,
+        "Projects Completed"
+    ))
+})
+
 const About = AsyncHandler(async (req,res)=>{
     const {background} = req.body
     const {resumeId} = req.params
@@ -259,11 +276,6 @@ const About = AsyncHandler(async (req,res)=>{
 
     if(!prevResume){
         throw new ApiError(401,"No resume found")
-    }
-    console.log(prevResume.owner)
-    console.log(req.user?._id)
-    if(prevResume.owner.toString() !== req.user?._id.toString()){
-        throw new ApiError(401,"you dont have permission to edit this file")
     }
 
     prevResume.set({
@@ -352,5 +364,6 @@ export {
     SkillsDetails,
     About,
     GetResumeById,
+    SaveProjects,
     DeleteResume
 }

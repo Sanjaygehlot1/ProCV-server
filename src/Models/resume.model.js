@@ -68,27 +68,34 @@ const ResumeSchema = new Schema({
             },
             companyName: {
                 type: String,
-                
+
             },
             remote: {
                 type: Boolean
             },
-            currentlyWorking :{
-                type : Boolean
+            currentlyWorking: {
+                type: Boolean
             },
             startDate: {
-                startMonth : String,
-                startYear : String
+                startMonth: String,
+                startYear: String
             },
             endDate: {
-                endMonth : String,
-                endYear : String
+                endMonth: String,
+                endYear: String
             }
         }
     },
     skills: {
         type: [String],
     },
+    projects: [
+        {
+            title: String,
+            description: String,
+            link: String
+        }
+    ],
     about: {
         type: String
     }
