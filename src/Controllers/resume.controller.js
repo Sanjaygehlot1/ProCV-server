@@ -55,7 +55,6 @@ const PersonalDetails = AsyncHandler(async (req,res)=>{
     if(!storedResume){
         throw new ApiError(402,"No resume found")
     }
-    console.log(storedResume)
  
     storedResume.set({
         firstName,
