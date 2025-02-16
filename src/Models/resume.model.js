@@ -1,10 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
 const ResumeSchema = new Schema({
-    owner: {
-        type: mongoose.Types.ObjectId,
-        ref: "User"
-    },
     template: {
         type: String,
     },

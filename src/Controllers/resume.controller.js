@@ -82,7 +82,7 @@ const PersonalDetails = AsyncHandler(async (req,res)=>{
     .json(new ApiResponse(
         200,
         resume,
-        "Resume part 2 Completed"
+        "Personal Details Updated!"
     ))
     
 
@@ -136,7 +136,7 @@ const EducationDetails = AsyncHandler(async (req,res)=>{
     .json(new ApiResponse(
         200,
         resume,
-        "Resume part 3 Completed"
+        "Education Details Updated"
     ))
 
 })
@@ -189,7 +189,7 @@ const ExperienceDetails = AsyncHandler(async (req,res)=>{
     .json(new ApiResponse(
         200,
         resume,
-        "Resume part 4 Completed"
+        "Experience Details Updated!"
     ))
 
 })
@@ -224,7 +224,7 @@ const SkillsDetails = AsyncHandler(async (req,res)=>{
     .json(new ApiResponse(
         200,
         resume,
-        "Resume part 5 Completed"
+        "Skills Updated!"
     ))
 
 })
@@ -259,7 +259,7 @@ const SaveProjects = AsyncHandler(async(req,res)=>{
     .json(new ApiResponse(
         200,
         resume,
-        "Projects Completed"
+        "Projects Updated!"
     ))
 })
 
@@ -294,7 +294,42 @@ const About = AsyncHandler(async (req,res)=>{
     .json(new ApiResponse(
         200,
         resume,
-        "Resume part 6 Completed"
+        "Summary Updated!"
+    ))
+
+})
+const ChangeTemplate = AsyncHandler(async (req,res)=>{
+    const {resumeId} = req.params
+    const {templateNumber} = req.body
+
+    if(!resumeId){
+        throw new ApiError(401,"Id not found")
+    }
+
+    const prevResume = await Resume.findById(resumeId)
+
+    if(!prevResume){
+        throw new ApiError(401,"No resume found")
+    }
+
+    prevResume.set({
+        template : templateNumber.toString() 
+    })
+
+    await prevResume.save({validateBeforeSave: true})
+
+    const resume = await Resume.findById(prevResume._id)
+
+    if(!resume){
+        throw new ApiError(401,"No resume found")
+    }
+
+    return res
+    .status(200)
+    .json(new ApiResponse(
+        200,
+        resume,
+        "Template Changed!"
     ))
 
 })
@@ -326,33 +361,8 @@ const GetResumeById = AsyncHandler(async (req,res)=>{
     ))
 })
 
-const DeleteResume = AsyncHandler(async (req,res)=>{
-    const {resumeId} = req.params
 
-    if(!mongoose.isValidObjectId(resumeId)){
-        throw new ApiError(400, "Id invalid")
-    }
 
-    if(!resumeId){
-        throw new ApiError(400, "Id not found")
-
-    }
-
-    const resume = await Resume.findByIdAndDelete(resumeId)
-
-    
-    if(!resume){
-        throw new ApiError(400, "Resume not found")
-    }
-
-    return res
-    .status(200)
-    .json(new ApiResponse(
-        200,
-        {},
-        "Resume deleted successfully"
-    ))
-})
 
 
 export {
@@ -363,6 +373,6 @@ export {
     SkillsDetails,
     About,
     GetResumeById,
+    ChangeTemplate,
     SaveProjects,
-    DeleteResume
 }
