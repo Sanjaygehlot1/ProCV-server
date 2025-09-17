@@ -1,6 +1,6 @@
-import DBConnect from "./DataBase/DBConnection.js";
+import DBConnect from "../src/DataBase/DBConnection.js";
 import dotenv from 'dotenv'
-import { app } from "./app.js";
+import { app } from "../src/app.js";
 import serverless from 'serverless-http'; 
 
 dotenv.config({
